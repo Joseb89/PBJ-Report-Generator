@@ -1,0 +1,32 @@
+[
+    {
+        "id": "JPADMIN",
+        "firstName": "Jane",
+        "lastName": "Perry",
+        "jobTitleCode": 1 
+    },
+    {
+        "id": 7262,
+        "firstName": "Edna",
+        "lastName": "Flores",
+        "jobTitleCode": 9
+    },
+    {
+        "id": 1435,
+        "firstName": "Kelle",
+        "lastName": "Rodriguez",
+        "jobTitleCode": 21
+    },
+    {
+        "id": 1441,
+        "firstName": "Alysha",
+        "lastName": "Behrends",
+        "jobTitleCode": 26
+    },
+    {
+        "id": 7138,
+        "firstName": "Shannon",
+        "lastName": "Benke",
+        "jobTitleCode": 26
+    }
+]
