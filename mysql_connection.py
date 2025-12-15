@@ -6,7 +6,11 @@ from pathlib import Path
 
 def create_database():
 
-    employees = json.loads(Path("employee.json").read_text)
+    with open("employee.json", "r") as file:
+        employees = json.load(file)
+    
+    print(employees)  
+
 
     with mysql.connector.connect(host="localhost", user="jose", password="Kn0pp!") as connection:
 
