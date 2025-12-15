@@ -1,10 +1,12 @@
 import json
 import mysql.connector
 
+from pathlib import Path
+
 
 def create_database():
 
-    employees = json.loads("employee.json")
+    employees = json.loads(Path("employee.json").read_text)
 
     with mysql.connector.connect(host="localhost", user="jose", password="Kn0pp!") as connection:
 
