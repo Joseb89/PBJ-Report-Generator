@@ -3,6 +3,7 @@ from zipfile import ZipFile
 
 import header
 import mysql_connection
+import excel
 
 
 def main():
@@ -15,7 +16,7 @@ def main():
     ET.indent(tree, '  ')
 
     file_name = "report.xml"
-    mysql_connection.create_database()
+    excel.create_json_file()
 
     # tree.write(file_name, encoding="us-ascii", xml_declaration=True)
 
