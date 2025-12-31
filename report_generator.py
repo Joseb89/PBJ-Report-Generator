@@ -16,7 +16,7 @@ def main():
     ET.indent(tree, '  ')
 
     file_name = "report.xml"
-    excel.create_json_file()
+    mysql_connection.insert_employees()
 
     # tree.write(file_name, encoding="us-ascii", xml_declaration=True)
 

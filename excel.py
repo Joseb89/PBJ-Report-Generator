@@ -1,7 +1,6 @@
 import csv
-import json
 
-def create_json_file():
+def create_employee_dictionary():
 
     with open("PBJ Report.csv", "r") as file:
         csv_File = csv.DictReader(file)
@@ -16,16 +15,16 @@ def create_json_file():
             last_name = _set_name(line.get("Provider"))[0]
             job_tite_code = _set_job_title_code(line.get("Certification"))
             
-            dict_data = {"id": id, "firstName": first_name, "lastName": last_name, "jobTitleCode": job_tite_code}   
+            dict_data = {"employee_id": id, "first_name": first_name, "last_name": last_name, "job_code": job_tite_code, "pay_code": 2}   
 
             dict_list.append(dict_data)
 
     id_set = set()       
 
     for x in dict_list:
-        id_set.add(x["id"])
+        id_set.add(x["employee_id"])
 
-    json_data = []
+    filtered_list = []
     current = ''   
 
     while id_set:
@@ -34,15 +33,13 @@ def create_json_file():
         if top == current:
             continue
 
-        first_occurence = next((dic for dic in dict_list if dic["id"] == top), None)  
+        first_occurence = next((dic for dic in dict_list if dic["employee_id"] == top), None)  
 
-        json_data.append(first_occurence)
+        filtered_list.append(first_occurence)
 
         current = top
 
-    json_string = json.dumps(json_data, indent=4)
-
-    print(json_string)           
+    return filtered_list         
 
 def _set_name(name):
     full_name = name.split(",")

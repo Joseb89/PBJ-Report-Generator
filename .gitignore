@@ -2,6 +2,7 @@
 report.xml
 PBJ Report.csv
 employee.json
+credentials.py
 =======
 .vscode
 __pycache__
