@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS employees(
     employee_id VARCHAR(12) PRIMARY KEY UNIQUE NOT NULL,
     first_name VARCHAR(20),
     last_name VARCHAR(20),
-    job_code BIT(2)
+    job_code BIT(2),
     pay_code BIT(2)
 ):
 

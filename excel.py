@@ -1,4 +1,5 @@
 import csv
+import json
 
 def create_json_file():
 
@@ -24,16 +25,24 @@ def create_json_file():
     for x in dict_list:
         id_set.add(x["id"])
 
-    json_data = []    
+    json_data = []
+    current = ''   
 
     while id_set:
         top = id_set.pop()
+
+        if top == current:
+            continue
 
         first_occurence = next((dic for dic in dict_list if dic["id"] == top), None)  
 
         json_data.append(first_occurence)
 
-    print(json_data)           
+        current = top
+
+    json_string = json.dumps(json_data, indent=4)
+
+    print(json_string)           
 
 def _set_name(name):
     full_name = name.split(",")
