@@ -1,4 +1,5 @@
 import xml.etree.ElementTree as ET
+import datetime
 
 def create_header(root):
     header = ET.SubElement(root, 'header')
@@ -14,4 +15,4 @@ def create_header(root):
     reportQuarter.text = '4'
 
     federalFiscalYear = ET.SubElement(header, 'federalFiscalYear')
-    federalFiscalYear.text = '2025'
+    federalFiscalYear.text = str(datetime.date.today().year)

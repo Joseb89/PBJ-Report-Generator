@@ -1,20 +1,13 @@
 import xml.etree.ElementTree as ET
-import excel
-import math
+import mysql_connection
 
 def create_employees(root):
-    user_ids_set = set()
-
-    for x in excel.user_ids_list:
-        if math.isnan(x):
-            continue
-
-        user_ids_set.add(str(int(x)))
+    user_ids = mysql_connection.get_employee_ids()
 
     employees = ET.SubElement(root, 'employees')
 
-    for x in user_ids_set:
+    for id in user_ids:
         employee = ET.SubElement(employees, 'employee')
 
         employeeId = ET.SubElement(employee, 'employeeId')
-        employeeId.text = x
+        employeeId.text = str(id)
