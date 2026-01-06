@@ -12,5 +12,5 @@ CREATE TABLE IF NOT EXISTS work_days (
     clock_in_date DATE NOT NULL,
     clock_in_time TIME NOT NULL,
     clock_out_date DATE NOT NULL,
-    clock_out_time TIME NOT NULL
+    clock_out_date TIME NOT NULL
 )

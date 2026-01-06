@@ -1,33 +1,24 @@
 import csv
 from datetime import datetime
 
-def create_employee_dictionary():
+employee_id_sql = "employee_id"
+first_name_sql = "first_name"
+last_name_sql = "last_name"
+clock_in_date_sql = "clock_in_date"
+clock_in_time_sql = "clock_in_time"
+clock_out_date_sql = "clock_out_date"
+clock_out_time_sql = "clock_out_time"
+job_code_sql = "job_code"
+pay_code_sql = "pay_code"
 
-    with open("PBJ Report.csv", "r") as file:
-        csv_File = csv.DictReader(file)
-        dict_list= []
+def create_employees():
 
-        for line in csv_File:
-            if line.get("Provider") == '':
-                continue
-
-            id = line.get("User ID")
-            first_name = _set_name(line.get("Provider"))[1].strip()
-            last_name = _set_name(line.get("Provider"))[0]
-            job_tite_code = _set_job_title_code(line.get("Certification"))
-            
-            clock_in_date = _format_date(line.get("Clock In Date"))
-            clock_out_date = _format_date(line.get("Clock Out Date"))
-            
-            dict_data = {"employee_id": id, "first_name": first_name, "last_name": last_name,
-                         "job_code": job_tite_code, "pay_code": 2}   
-
-            dict_list.append(dict_data)
+    employee_dict = create_employee_dictionary()
 
     id_set = set()       
 
-    for x in dict_list:
-        id_set.add(x["employee_id"])
+    for employee in employee_dict:
+        id_set.add(employee[employee_id_sql])
 
     filtered_list = []
     current = ''   
@@ -38,13 +29,60 @@ def create_employee_dictionary():
         if top == current:
             continue
 
-        first_occurence = next((dic for dic in dict_list if dic["employee_id"] == top), None)  
+        first_occurence = next((dic for dic in employee_dict if dic[employee_id_sql] == top), None)
 
-        filtered_list.append(first_occurence)
+        filtered_dict = {employee_id_sql: first_occurence.get(employee_id_sql), 
+                         first_name_sql: first_occurence.get(first_name_sql),
+                         last_name_sql: first_occurence.get(last_name_sql),
+                         job_code_sql: first_occurence.get(job_code_sql),
+                         pay_code_sql: first_occurence.get(pay_code_sql)} 
+
+        filtered_list.append(filtered_dict)
 
         current = top
 
-    return filtered_list     
+    print(filtered_list)   
+
+def create_employee_dictionary():
+    user_id_column = "User ID"
+    nurse_name_column = "Provider"
+    job_title_column = "Certification"
+    clock_in_date_column = "Clock In Date"
+    clock_out_date_column = "Clock Out Date"
+
+    with open("PBJ Report.csv", "r") as file:
+        csv_File = csv.DictReader(file)
+        dict_list= []
+
+        for line in csv_File:
+            if line.get(nurse_name_column) == '':
+                continue
+
+            id = line.get(user_id_column)
+
+            nurse_name = _set_name(line.get(nurse_name_column))
+            first_name = nurse_name[1].strip()
+            last_name = nurse_name[0].strip()
+
+            clock_in_timestamp = _format_date(line.get(clock_in_date_column))
+            clock_out_timestamp = _format_date(line.get(clock_out_date_column))
+            
+            clock_in_date = clock_in_timestamp[0].strip()
+            clock_in_time = clock_in_timestamp[1].strip()
+
+            clock_out_date = clock_out_timestamp[0].strip()
+            clock_out_time = clock_out_timestamp[1].strip()
+
+            job_tite_code = _set_job_title_code(line.get(job_title_column))
+            
+            dict_data = {employee_id_sql: id, first_name_sql: first_name, last_name_sql: last_name,
+                         clock_in_date_sql: clock_in_date, clock_out_date_sql: clock_out_date,
+                         clock_in_time_sql: clock_in_time, clock_out_time_sql: clock_out_time,
+                         job_code_sql: job_tite_code, pay_code_sql: 2}   
+
+            dict_list.append(dict_data)
+
+    print(dict_list)    
 
 def _set_name(name):
     full_name = name.split(",")
@@ -57,6 +95,7 @@ def _set_job_title_code(job_title):
     return job_titles.get(job_title)
 
 def _format_date(date_string):
-    format_string = "%Y-%m-%d %H:%M:%S"
+    format_string = "%m/%d/%Y, %I:%M %p"
+    employee_timestamp = datetime.strptime(date_string, format_string)
 
-    return datetime.strptime(date_string, format_string)
+    return employee_timestamp.strftime("%Y-%m-%d %H:%M").split()
