@@ -12,7 +12,6 @@ job_code_sql = "job_code"
 pay_code_sql = "pay_code"
 
 def create_employees():
-
     employee_dict = create_employee_dictionary()
 
     id_set = set()       
@@ -41,7 +40,19 @@ def create_employees():
 
         current = top
 
-    print(filtered_list)   
+    return filtered_list
+
+def create_employee_timestamps():
+    employee_dict = create_employee_dictionary()
+
+    filtered_list = [{employee_id_sql: employee.get(employee_id_sql),
+                     clock_in_date_sql: employee.get(clock_in_date_sql),
+                     clock_in_time_sql: employee.get(clock_in_time_sql),
+                     clock_out_date_sql: employee.get(clock_out_date_sql),
+                     clock_out_time_sql: employee.get(clock_out_time_sql)} 
+                     for employee in employee_dict]
+    
+    return filtered_list
 
 def create_employee_dictionary():
     user_id_column = "User ID"
@@ -82,7 +93,7 @@ def create_employee_dictionary():
 
             dict_list.append(dict_data)
 
-    print(dict_list)    
+    return dict_list   
 
 def _set_name(name):
     full_name = name.split(",")
