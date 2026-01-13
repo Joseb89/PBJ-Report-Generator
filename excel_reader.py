@@ -1,15 +1,15 @@
 import csv
 from datetime import datetime
 
-employee_id_sql = "employee_id"
-first_name_sql = "first_name"
-last_name_sql = "last_name"
-clock_in_date_sql = "clock_in_date"
-clock_in_time_sql = "clock_in_time"
-clock_out_date_sql = "clock_out_date"
-clock_out_time_sql = "clock_out_time"
-job_code_sql = "job_code"
-pay_code_sql = "pay_code"
+_employee_id_sql = "employee_id"
+_first_name_sql = "first_name"
+_last_name_sql = "last_name"
+_clock_in_date_sql = "clock_in_date"
+_clock_in_time_sql = "clock_in_time"
+_clock_out_date_sql = "clock_out_date"
+_clock_out_time_sql = "clock_out_time"
+_job_code_sql = "job_code"
+_pay_code_sql = "pay_code"
 
 def create_employees():
     employee_dict = create_employee_dictionary()
@@ -17,7 +17,7 @@ def create_employees():
     id_set = set()       
 
     for employee in employee_dict:
-        id_set.add(employee[employee_id_sql])
+        id_set.add(employee[_employee_id_sql])
 
     filtered_list = []
     current = ''   
@@ -28,13 +28,13 @@ def create_employees():
         if top == current:
             continue
 
-        first_occurence = next((dic for dic in employee_dict if dic[employee_id_sql] == top), None)
+        first_occurence = next((dic for dic in employee_dict if dic[_employee_id_sql] == top), None)
 
-        filtered_dict = {employee_id_sql: first_occurence.get(employee_id_sql), 
-                         first_name_sql: first_occurence.get(first_name_sql),
-                         last_name_sql: first_occurence.get(last_name_sql),
-                         job_code_sql: first_occurence.get(job_code_sql),
-                         pay_code_sql: first_occurence.get(pay_code_sql)} 
+        filtered_dict = {_employee_id_sql: first_occurence.get(_employee_id_sql), 
+                         _first_name_sql: first_occurence.get(_first_name_sql),
+                         _last_name_sql: first_occurence.get(_last_name_sql),
+                         _job_code_sql: first_occurence.get(_job_code_sql),
+                         _pay_code_sql: first_occurence.get(_pay_code_sql)} 
 
         filtered_list.append(filtered_dict)
 
@@ -45,11 +45,11 @@ def create_employees():
 def create_employee_timestamps():
     employee_dict = create_employee_dictionary()
 
-    filtered_list = [{employee_id_sql: employee.get(employee_id_sql),
-                     clock_in_date_sql: employee.get(clock_in_date_sql),
-                     clock_in_time_sql: employee.get(clock_in_time_sql),
-                     clock_out_date_sql: employee.get(clock_out_date_sql),
-                     clock_out_time_sql: employee.get(clock_out_time_sql)} 
+    filtered_list = [{_employee_id_sql: employee.get(_employee_id_sql),
+                     _clock_in_date_sql: employee.get(_clock_in_date_sql),
+                     _clock_in_time_sql: employee.get(_clock_in_time_sql),
+                     _clock_out_date_sql: employee.get(_clock_out_date_sql),
+                     _clock_out_time_sql: employee.get(_clock_out_time_sql)} 
                      for employee in employee_dict]
     
     return filtered_list
@@ -86,10 +86,10 @@ def create_employee_dictionary():
 
             job_tite_code = _set_job_title_code(line.get(job_title_column))
             
-            dict_data = {employee_id_sql: id, first_name_sql: first_name, last_name_sql: last_name,
-                         clock_in_date_sql: clock_in_date, clock_out_date_sql: clock_out_date,
-                         clock_in_time_sql: clock_in_time, clock_out_time_sql: clock_out_time,
-                         job_code_sql: job_tite_code, pay_code_sql: 2}   
+            dict_data = {_employee_id_sql: id, _first_name_sql: first_name, _last_name_sql: last_name,
+                         _clock_in_date_sql: clock_in_date, _clock_out_date_sql: clock_out_date,
+                         _clock_in_time_sql: clock_in_time, _clock_out_time_sql: clock_out_time,
+                         _job_code_sql: job_tite_code, _pay_code_sql: 2}   
 
             dict_list.append(dict_data)
 

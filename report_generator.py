@@ -2,15 +2,15 @@ import xml.etree.ElementTree as ET
 from zipfile import ZipFile
 
 import header
-import employees
+import xml_file_creator
 
 
 def main():
     data = ET.Element('nursingHomeData')
 
     header.create_header(data)
-    employees.create_employees(data)
-    employees.create_work_days(data)
+    xml_file_creator.create_employees(data)
+    xml_file_creator.create_work_days(data)
 
     tree = ET.ElementTree(data)
 
