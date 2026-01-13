@@ -19,7 +19,7 @@ def main():
 
     file_name = "report.xml"
 
-    mysql_connection.insert_work_days()
+    print(employees.create_work_days())
 
     # tree.write(file_name, encoding="us-ascii", xml_declaration=True)
 

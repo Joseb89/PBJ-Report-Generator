@@ -11,3 +11,15 @@ def create_employees(root):
 
         employeeId = ET.SubElement(employee, 'employeeId')
         employeeId.text = str(id)
+
+def create_work_days():
+    user_ids = mysql_connection.get_employee_ids()
+
+    user_id_list = []
+
+    for id in user_ids:
+        work_days = mysql_connection.get_employee_work_days(id)
+
+        user_id_list.append(work_days)
+
+    return user_id_list    

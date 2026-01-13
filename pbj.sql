@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS employees(
     last_name VARCHAR(20),
     job_code TINYINT,
     pay_code TINYINT
-):
+);
 
 CREATE TABLE IF NOT EXISTS work_days (
     id INT PRIMARY KEY AUTO_INCREMENT,
