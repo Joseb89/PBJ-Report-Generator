@@ -1,14 +1,13 @@
 import xml.etree.ElementTree as ET
 from zipfile import ZipFile
 
-import header
 import xml_file_creator
 
 
 def main():
     data = ET.Element('nursingHomeData')
 
-    header.create_header(data)
+    xml_file_creator.create_header(data)
     xml_file_creator.create_employees(data)
     xml_file_creator.create_work_days(data)
 
