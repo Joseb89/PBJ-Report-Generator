@@ -3,6 +3,8 @@ import datetime
 import mysql_connection
 import credentials
 
+from datetime import timedelta
+
 _user_ids = mysql_connection.get_employee_ids()
 
 def create_header(root):
@@ -46,12 +48,26 @@ def create_work_days(root):
 
         for work_day in work_days:
 
-            clock_in_date = work_day[2]
+            clock_in_date = str(work_day[2])
             clock_in_time = work_day[3]
-            clock_out_date = work_day[4]
+            clock_out_date = str(work_day[4])
             clock_out_time = work_day[5]
 
             new_work_day = ET.SubElement(employee_work_days, "workDay")
-            
+
             new_work_date = ET.SubElement(new_work_day, "date")
-            new_work_date.text = str(clock_in_date)          
+            new_work_date.text = clock_in_date
+
+            hour_entries = ET.SubElement(new_work_day, "hourEntries")
+
+            if clock_out_date == clock_in_date:
+                total_hours = (clock_out_time.total_seconds() / 3600 - (clock_in_time.total_seconds() / 3600))
+
+                hour_entry = ET.SubElement(hour_entries, "hourEntry")
+                
+                hour = ET.SubElement(hour_entry, "hours")
+                hour.text = f"{total_hours: .2f}"
+
+            else:
+                new_work_date2 = ET.SubElement(new_work_day, "date")
+                new_work_date2.text = clock_out_date          
