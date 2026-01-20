@@ -28,13 +28,13 @@ def get_employee_ids():
                                         database=credentials.database) as connection:
 
                 with connection.cursor() as cursor:
-                     select_query = "SELECT employee_id FROM employees"
+                     select_query = "SELECT employee_id, job_code, pay_code FROM employees"
 
                      cursor.execute(select_query)
 
                      user_ids = cursor.fetchall()
 
-                     return [id[0] for id in user_ids]    
+                     return [id for id in user_ids]    
         except Error as error:
              print(error)
 
