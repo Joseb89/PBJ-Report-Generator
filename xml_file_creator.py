@@ -46,28 +46,50 @@ def create_work_days(root):
 
         work_days = mysql_connection.get_employee_work_days(id)
 
+        current_date = ''
+        total_hours = 0
+
         for work_day in work_days:
-
             clock_in_date = str(work_day[2])
-            clock_in_time = work_day[3]
+            clock_in_time = work_day[3].total_seconds() / 3600
             clock_out_date = str(work_day[4])
-            clock_out_time = work_day[5]
+            clock_out_time = work_day[5].total_seconds() / 3600
 
-            new_work_day = ET.SubElement(employee_work_days, "workDay")
+            additional_hours = 0
+            work_hours = 0
 
-            new_work_date = ET.SubElement(new_work_day, "date")
-            new_work_date.text = clock_in_date
+            if current_date != '' and current_date != clock_in_date:
+                _create_hour_entries(employee_work_days, current_date, total_hours)
 
-            hour_entries = ET.SubElement(new_work_day, "hourEntries")
+                current_date = clock_in_date
+                total_hours = 0
 
             if clock_out_date == clock_in_date:
-                total_hours = (clock_out_time.total_seconds() / 3600 - (clock_in_time.total_seconds() / 3600))
+                work_hours = (clock_out_time - clock_in_time) - 0.3
+                total_hours += work_hours
 
-                hour_entry = ET.SubElement(hour_entries, "hourEntry")
-                
-                hour = ET.SubElement(hour_entry, "hours")
-                hour.text = f"{total_hours: .2f}"
+                current_date = clock_in_date
 
             else:
-                new_work_date2 = ET.SubElement(new_work_day, "date")
-                new_work_date2.text = clock_out_date          
+                additional_hours = 24 - clock_in_time
+                total_hours += additional_hours
+
+                _create_hour_entries(employee_work_days, clock_in_date, total_hours)
+
+                total_hours = clock_out_time
+                current_date = clock_out_date
+
+        _create_hour_entries(employee_work_days, current_date, total_hours)
+
+def _create_hour_entries(root, date, hours):
+    new_work_day = ET.SubElement(root, "workDay")
+
+    new_work_date = ET.SubElement(new_work_day, "date")
+    new_work_date.text = date
+
+    hour_entries = ET.SubElement(new_work_day, "hourEntries")
+
+    hour_entry = ET.SubElement(hour_entries, "hourEntry")
+
+    hour = ET.SubElement(hour_entry, "hours")
+    hour.text = f"{hours:.2f}"
