@@ -7,9 +7,10 @@ import xml_file_creator
 def main():
     data = ET.Element('nursingHomeData')
 
+    xml_file_creator.create_databases()
     xml_file_creator.create_header(data)
-    xml_file_creator.create_employees(data)
-    xml_file_creator.create_work_days(data)
+    xml_file_creator.create_employee_ids(data)
+    xml_file_creator.create_agency_work_days(data)
 
     tree = ET.ElementTree(data)
 

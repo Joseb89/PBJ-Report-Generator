@@ -3,7 +3,11 @@ import datetime
 import mysql_connection
 import credentials
 
-_user_ids = mysql_connection.get_employee_ids()
+def create_databases():
+    mysql_connection.insert_knopp_employees()
+    mysql_connection.insert_agency_employees()
+    mysql_connection.insert_admin_work_days()
+    mysql_connection.insert_agency_work_days()
 
 def create_header(root):
     header = ET.SubElement(root, 'header')
@@ -21,69 +25,74 @@ def create_header(root):
     federal_fiscal_year = ET.SubElement(header, 'federalFiscalYear')
     federal_fiscal_year.text = str(datetime.date.today().year)
 
-def create_employees(root):
+def create_employee_ids(root):
     employees = ET.SubElement(root, 'employees')
 
-    for id in _user_ids:
-        user_id = id[0]
+    all_employees = mysql_connection.get_knopp_employees() + mysql_connection.get_agency_employees()
+
+    for emp in all_employees:
+        user_id = emp[0]
 
         employee = ET.SubElement(employees, 'employee')
 
         employee_id = ET.SubElement(employee, 'employeeId')
         employee_id.text = str(user_id)
 
-def create_work_days(root):
+def create_agency_work_days(root):
     staffing_hours = ET.SubElement(root, 'staffingHours')
     staffing_hours.set("processType", "merge")
 
-    for id in _user_ids:
-        user_id = id[0]
-        job_code = id[1]
-        pay_code = id[2]
+    agency_employees = mysql_connection.get_agency_employees()
+
+    for emp in agency_employees:
+        user_id = emp[0]
+        job_code = emp[1]
+        pay_code = emp[2]
 
         staff_hours = ET.SubElement(staffing_hours, "staffHours")
 
         employee_id = ET.SubElement(staff_hours, "employeeId")
         employee_id.text = str(user_id)
 
-        employee_work_days = ET.SubElement(staff_hours, "workDays") 
+        employee_work_days = ET.SubElement(staff_hours, "workDays")
 
-        work_days = mysql_connection.get_employee_work_days(user_id)
+        work_days = mysql_connection.get_agency_work_days(user_id)
 
         current_date = ''
-        total_hours = 0
+        work_hours = 0.00
 
         for work_day in work_days:
             clock_in_date = str(work_day[2])
             clock_in_time = work_day[3].total_seconds() / 3600
             clock_out_date = str(work_day[4])
-            clock_out_time = work_day[5].total_seconds() / 3600
+            total_hours = work_day[6]
 
-            additional_hours = 0
-            work_hours = 0
+            print(total_hours)
 
             if current_date != '' and current_date != clock_in_date:
-                _create_hour_entries(employee_work_days, current_date, total_hours, job_code, pay_code)
+                _create_hour_entries(employee_work_days, current_date, work_hours, job_code, pay_code)
 
                 current_date = clock_in_date
-                total_hours = 0
+                work_hours = 0.00
 
             if clock_out_date == clock_in_date:
-                work_hours = (clock_out_time - clock_in_time) - 0.3
-                total_hours += work_hours
+                work_hours += total_hours
 
                 current_date = clock_in_date
 
             else:
-                additional_hours = 24 - clock_in_time
-                total_hours += additional_hours
+                pm_hours = 24 - clock_in_time
 
-                _create_hour_entries(employee_work_days, clock_in_date, total_hours, job_code, pay_code)
+                work_hours += pm_hours
 
-                total_hours = clock_out_time
+                _create_hour_entries(employee_work_days, current_date, work_hours, job_code, pay_code)
+
                 current_date = clock_out_date
 
-        _create_hour_entries(employee_work_days, current_date, total_hours, job_code, pay_code)
+                work_hours = total_hours - pm_hours
+
+        _create_hour_entries(employee_work_days, current_date, work_hours, job_code, pay_code)
+
 
 def _create_hour_entries(root, date, hours, job_code, pay_code):
     new_work_day = ET.SubElement(root, "workDay")

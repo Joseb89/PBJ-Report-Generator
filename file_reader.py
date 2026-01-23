@@ -1,5 +1,9 @@
 import csv
-from datetime import datetime
+import json
+import credentials
+
+from datetime import datetime, timedelta
+from decimal import Decimal
 
 _employee_id_sql = "employee_id"
 _first_name_sql = "first_name"
@@ -8,18 +12,38 @@ _clock_in_date_sql = "clock_in_date"
 _clock_in_time_sql = "clock_in_time"
 _clock_out_date_sql = "clock_out_date"
 _clock_out_time_sql = "clock_out_time"
+_total_hours_sql = "total_hours"
 _job_code_sql = "job_code"
 _pay_code_sql = "pay_code"
 
-def create_employees():
-    employee_dict = create_employee_dictionary()
+def create_knopp_employees():
+    employee_dict_list = []
+
+    with open("employee.json", "r") as json_file:
+        json_dict = json.load(json_file)
+        
+        for employee_json in json_dict:
+            modified_json_dict = {_employee_id_sql: employee_json.get("id"),
+                                  _first_name_sql: employee_json.get("firstName"),
+                                  _last_name_sql: employee_json.get("lastName"),
+                                  _job_code_sql: employee_json.get("jobTitleCode"),
+                                  _pay_code_sql: 2}
+            
+            employee_dict_list.append(modified_json_dict)
+
+    return employee_dict_list         
+
+
+def create_agency_employees():
+    employee_dict_list = []
+
+    employee_dict = _create_agency_dictionary()
 
     id_set = set()       
 
     for employee in employee_dict:
         id_set.add(employee[_employee_id_sql])
 
-    filtered_list = []
     current = ''   
 
     while id_set:
@@ -36,36 +60,64 @@ def create_employees():
                          _job_code_sql: first_occurence.get(_job_code_sql),
                          _pay_code_sql: first_occurence.get(_pay_code_sql)} 
 
-        filtered_list.append(filtered_dict)
+        employee_dict_list.append(filtered_dict)
 
         current = top
 
-    return filtered_list
+    return employee_dict_list
 
-def create_employee_timestamps():
-    employee_dict = create_employee_dictionary()
+
+def create_admin_timestamps():
+    admin_timestamps = []
+
+    start_date = datetime(2025, 10, 1)
+    end_date = datetime(2026, 1, 1)
+
+    current_date = start_date
+
+    while current_date != end_date:
+        if current_date.weekday()  == 5 or current_date.weekday() == 6:
+            current_date += timedelta(days=1)
+
+            continue
+
+        timepstamp_dict = {_employee_id_sql: credentials.admin_id, 
+                           _clock_in_date_sql: current_date,
+                           _total_hours_sql: 8.00}
+        
+        admin_timestamps.append(timepstamp_dict)
+
+        current_date += timedelta(days=1)
+
+    return admin_timestamps   
+
+def create_agency_timestamps():
+    employee_dict = _create_agency_dictionary()
 
     filtered_list = [{_employee_id_sql: employee.get(_employee_id_sql),
                      _clock_in_date_sql: employee.get(_clock_in_date_sql),
                      _clock_in_time_sql: employee.get(_clock_in_time_sql),
                      _clock_out_date_sql: employee.get(_clock_out_date_sql),
-                     _clock_out_time_sql: employee.get(_clock_out_time_sql)} 
+                     _clock_out_time_sql: employee.get(_clock_out_time_sql),
+                     _total_hours_sql: employee.get(_total_hours_sql)} 
                      for employee in employee_dict]
     
     return filtered_list
 
-def create_employee_dictionary():
+
+def _create_agency_dictionary():
     user_id_column = "User ID"
     nurse_name_column = "Provider"
     job_title_column = "Certification"
     clock_in_date_column = "Clock In Date"
     clock_out_date_column = "Clock Out Date"
+    total_hours_column = "Sum of total_bill_hours"
 
-    with open("PBJ Report.csv", "r") as file:
-        csv_File = csv.DictReader(file)
-        dict_list= []
+    with open("PBJ Report.csv", "r") as excel_file:
+        csv_file = csv.DictReader(excel_file)
+        dict_list = []
 
-        for line in csv_File:
+        for line in csv_file:
             if line.get(nurse_name_column) == '':
                 continue
 
@@ -85,15 +137,17 @@ def create_employee_dictionary():
             clock_out_time = clock_out_timestamp[1].strip()
 
             job_tite_code = _set_job_title_code(line.get(job_title_column))
-            
+
+            total_hours = float(line.get(total_hours_column))
+
             dict_data = {_employee_id_sql: id, _first_name_sql: first_name, _last_name_sql: last_name,
                          _clock_in_date_sql: clock_in_date, _clock_out_date_sql: clock_out_date,
                          _clock_in_time_sql: clock_in_time, _clock_out_time_sql: clock_out_time,
-                         _job_code_sql: job_tite_code, _pay_code_sql: 2}   
+                         _total_hours_sql: total_hours, _job_code_sql: job_tite_code, _pay_code_sql: 3}
 
             dict_list.append(dict_data)
 
-    return dict_list   
+    return dict_list
 
 def _set_name(name):
     full_name = name.split(",")
