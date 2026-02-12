@@ -3,30 +3,56 @@
         "id": "JPADMIN",
         "firstName": "Jane",
         "lastName": "Perry",
-        "jobTitleCode": 1 
+        "jobTitleCode": 1,
+        "payTypeCode": 2 
     },
     {
         "id": 7262,
         "firstName": "Edna",
         "lastName": "Flores",
-        "jobTitleCode": 9
+        "jobTitleCode": 9,
+        "payTypeCode": 2
     },
     {
         "id": 1435,
         "firstName": "Kelle",
         "lastName": "Rodriguez",
-        "jobTitleCode": 21
+        "jobTitleCode": 21,
+        "payTypeCode": 2
     },
     {
         "id": 1441,
         "firstName": "Alysha",
         "lastName": "Behrends",
-        "jobTitleCode": 26
+        "jobTitleCode": 26,
+        "payTypeCode": 2
     },
     {
         "id": 7138,
         "firstName": "Shannon",
         "lastName": "Benke",
-        "jobTitleCode": 26
+        "jobTitleCode": 26,
+        "payTypeCode": 2
+    },
+    {
+        "id": "DR. K",
+        "firstName": "John",
+        "lastName": "Kothmann",
+        "jobTitleCode": 2,
+        "payTypeCode": 3
+    },
+    {
+        "id": "PHARMACIST",
+        "firstName": "",
+        "lastName": "",
+        "jobTitleCode": 15,
+        "payTypeCode": 3
+    },
+        {
+        "id": "JRESE01AG",
+        "firstName": "Jovita",
+        "lastName": "Resendiz",
+        "jobTitleCode": 10,
+        "payTypeCode": 3
     }
 ]
