@@ -35,7 +35,10 @@ def create_body(root):
     current_id = ''
 
     staff_hours = None
+    staff_hour_entries = None
     work_days = None
+
+    previous_date = ''
 
     for id, work_day, total_hours, job_code, pay_code in user_work_days:
         if id == None:
@@ -54,22 +57,32 @@ def create_body(root):
             staff_employee_id = ET.SubElement(staff_hours, "employeeId")
             staff_employee_id.text = current_id
 
-            work_days = ET.SubElement(staff_hours, "workDays")
+            work_days = ET.SubElement(staff_hours, "workDays")   
 
         staff_work_day = ET.SubElement(work_days, "workDay")
+
+        if previous_date != '' and previous_date == work_day:
+            _create_hour_entry(staff_hour_entries, total_hours, job_code, pay_code)
+
+            continue 
 
         staff_date = ET.SubElement(staff_work_day, "date")
         staff_date.text = str(work_day)
 
         staff_hour_entries = ET.SubElement(staff_work_day, "hourEntries")
 
-        staff_hour_entry = ET.SubElement(staff_hour_entries, "hourEntry")
+        _create_hour_entry(staff_hour_entries, total_hours, job_code, pay_code)
 
-        staff_total_hours = ET.SubElement(staff_hour_entry, "hours")
-        staff_total_hours.text = f"{total_hours:.2f}"
+        previous_date = work_day
 
-        staff_job_title_code = ET.SubElement(staff_hour_entry, "jobTitleCode")
-        staff_job_title_code.text = str(job_code)
+def _create_hour_entry(root, total_hours, job_code, pay_code):
+    staff_hour_entry = ET.SubElement(root, "hourEntry")
 
-        staff_pay_type_code = ET.SubElement(staff_hour_entry, "payTypeCode")
-        staff_pay_type_code.text = str(pay_code)
+    staff_total_hours = ET.SubElement(staff_hour_entry, "hours")
+    staff_total_hours.text = f"{total_hours:.2f}"
+
+    staff_job_title_code = ET.SubElement(staff_hour_entry, "jobTitleCode")
+    staff_job_title_code.text = str(job_code)
+
+    staff_pay_type_code = ET.SubElement(staff_hour_entry, "payTypeCode")
+    staff_pay_type_code.text = str(pay_code)      
