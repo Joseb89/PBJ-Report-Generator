@@ -1,3 +1,7 @@
+"""
+The main class for exectuting the script to create the XML file.
+"""
+
 import xml.etree.ElementTree as ET
 from zipfile import ZipFile
 

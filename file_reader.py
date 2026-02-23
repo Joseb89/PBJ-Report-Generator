@@ -1,9 +1,20 @@
+"""
+Reads the JSON and CSV files to create 
+the dictionaries that will be used
+to insert the employee data and their 
+workdays in the database.
+"""
+
 import csv
 import json
 import credentials
 
 from datetime import datetime, timedelta
 
+'''
+Key values for the dictionares
+Matches the name of the respective database column
+'''
 _employee_id_sql = "employee_id"
 _first_name_sql = "first_name"
 _last_name_sql = "last_name"
@@ -13,6 +24,14 @@ _job_code_sql = "job_code"
 _pay_code_sql = "pay_code"
 
 def create_knopp_employees():
+    """
+    Reads the JSON file containing the regular employee data
+    and appends each employee to a dictionary list.
+
+    Returns:
+        list[dict]: List of dictionaries containing each employee
+    """
+    
     employee_dict_list = []
 
     with open("employee.json", "r") as json_file:
@@ -31,6 +50,15 @@ def create_knopp_employees():
 
 
 def create_agency_employees():
+    """
+    Filters out the created dictionary list and
+    appends the first instance of the specified
+    agency employee data to a new list.
+
+    Returns:
+        list[dict]: List of agency employee dictionaries
+        containing id, name, job title code, and pay code.
+    """
     employee_dict_list = []
 
     employee_dict = _create_agency_dictionary()
@@ -53,7 +81,6 @@ def create_agency_employees():
         filtered_dict = {_employee_id_sql: first_occurence.get(_employee_id_sql),
                          _first_name_sql: first_occurence.get(_first_name_sql),
                          _last_name_sql: first_occurence.get(_last_name_sql), 
-                         _total_hours_sql: first_occurence.get(_total_hours_sql),
                          _job_code_sql: first_occurence.get(_job_code_sql),
                          _pay_code_sql: first_occurence.get(_pay_code_sql)} 
 
@@ -65,6 +92,14 @@ def create_agency_employees():
 
 
 def create_admin_timestamps():
+    """
+    Creates a list of timestamp dictionaries for the administrator
+    for a specified pay period.
+
+    Returns:
+        list[dict]: List of timestamp dictionaries containing
+        the administrator's id and clock in date.
+    """
     admin_timestamps = []
 
     start_date = datetime(2025, 10, 1)
@@ -89,6 +124,16 @@ def create_admin_timestamps():
     return admin_timestamps   
 
 def create_agency_timestamps():
+    """
+    Filters out the created dictionary list and
+    appends each instance of the 
+    agency employee timestamps to a new list
+
+    Returns:
+        list[dict]: List of agency timestamp dictionaries
+        containing employee id, work date, and total hours 
+    """
+
     employee_dict = _create_agency_dictionary()
 
     filtered_list = [{_employee_id_sql: employee.get(_employee_id_sql),
@@ -100,6 +145,14 @@ def create_agency_timestamps():
 
 
 def _create_agency_dictionary():
+    """
+    Reads the CSV file containing the agency employee data
+    and workdays and appends the data to a dictionary list.
+
+    Returns:
+        list[dict]: List of dictionaries containing the employee data
+    """
+
     user_id_column = "employeeId"
     clock_in_date_column = "date"
     total_hours_column = "hours"

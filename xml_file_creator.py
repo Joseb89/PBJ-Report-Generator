@@ -1,3 +1,7 @@
+"""
+Creates the XML file based on the data retrieved from the MySQL database.
+"""
+
 import xml.etree.ElementTree as ET
 import datetime
 import mysql_connection
@@ -5,10 +9,19 @@ import credentials
 
 
 def create_databases():
+    """
+    Inserts the necessary employee and timestamp data into the databse.
+    """
     mysql_connection.insert_employees()
     mysql_connection.insert_work_days()
 
 def create_header(root):
+    """
+    Creates the header for the XML file.
+
+    Parameters:
+        root (Elememt[str]): The XML root to connect the header to.
+    """
     header = ET.SubElement(root, 'header')
     header.set('fileSpecVersion', '4.00.0')
 
@@ -25,6 +38,12 @@ def create_header(root):
     federal_fiscal_year.text = str(datetime.date.today().year)
 
 def create_body(root):
+    """
+    Creates the body for the XML file.
+
+    Parameters:
+        root (Elememt[str]): The XML root to connect the body to.
+    """
     employees = ET.SubElement(root, 'employees')
     
     staffing_hours = ET.SubElement(root, 'staffingHours')
@@ -76,6 +95,16 @@ def create_body(root):
         previous_date = work_day
 
 def _create_hour_entry(root, total_hours, job_code, pay_code):
+    """
+    Creates a new hour entry Element
+
+    Parameters:
+        root (Elememt[str]): The XML root to connect the hour entry to.
+        total_hours (float): The total hours the employee worked.
+        job_code (int): The job code that corresponds to the employee's occupation.
+        pay_code (int): Specifies whether the employee's pay was exempt, non-exempt, or contract.
+    """
+
     staff_hour_entry = ET.SubElement(root, "hourEntry")
 
     staff_total_hours = ET.SubElement(staff_hour_entry, "hours")
