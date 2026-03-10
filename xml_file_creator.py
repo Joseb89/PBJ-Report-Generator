@@ -49,7 +49,7 @@ def create_body(root):
     staffing_hours = ET.SubElement(root, 'staffingHours')
     staffing_hours.set("processType", "merge")
 
-    user_work_days = mysql_connection.get_work_days()
+    user_work_days = mysql_connection.get_all_work_days()
 
     current_id = ''
 

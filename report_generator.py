@@ -6,25 +6,27 @@ import xml.etree.ElementTree as ET
 from zipfile import ZipFile
 
 import xml_file_creator
+import mysql_connection
 
 
 def main():
-    data = ET.Element('nursingHomeData')
+    # data = ET.Element('nursingHomeData')
 
-    # xml_file_creator.create_databases()
-    xml_file_creator.create_header(data)
-    xml_file_creator.create_body(data)
+    # # xml_file_creator.create_databases()
+    # xml_file_creator.create_header(data)
+    # xml_file_creator.create_body(data)
 
-    tree = ET.ElementTree(data)
+    # tree = ET.ElementTree(data)
 
-    ET.indent(tree, '  ')
+    # ET.indent(tree, '  ')
 
-    file_name = "report.xml"
+    # file_name = "report.xml"
 
-    tree.write(file_name, encoding="ASCII", xml_declaration=True)
+    # tree.write(file_name, encoding="ASCII", xml_declaration=True)
 
-    with ZipFile("PBJ_Report_Generator.zip", "w") as zip_file:
-        zip_file.write(file_name)
+    # with ZipFile("PBJ_Report_Generator.zip", "w") as zip_file:
+    #     zip_file.write(file_name)
+    print(mysql_connection.get_employee_work_days("JPADMIN"))
 
 
 if __name__ == "__main__":

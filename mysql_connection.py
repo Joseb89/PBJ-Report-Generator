@@ -50,17 +50,16 @@ def insert_work_days():
 
     _insert_into_table(query=insert_command, dictionary_list=dictionary)
 
-def get_work_days():
+def get_all_work_days():
     """
     Retreives all of the employee timestamps from the employee_work_days database.
 
     Returns:
-        list[tuple]: The employee timestamps associated with the employee id
+        list[tuple]: The employee timestamps
 
     Raises:
         Error: if error occurs when connecting to or performing operations on the database.    
     """
-
     try:
         with mysql.connector.connect(host="localhost", 
                                     user=credentials.user, 
@@ -70,20 +69,37 @@ def get_work_days():
             with connection.cursor() as cursor:
 
                 select_query = """
-                SELECT employee_work_days.employee_id, employee_work_days.clock_in_date, 
-                employee_work_days.total_hours, employees.job_code, employees.pay_code
-                FROM employee_work_days
-                RIGHT JOIN employees ON employee_work_days.employee_id = employees.employee_id
-                ORDER BY employee_work_days.employee_id, employee_work_days.clock_in_date
+                    SELECT employee_work_days.employee_id, employee_work_days.clock_in_date, 
+                    employee_work_days.total_hours, employees.job_code, employees.pay_code
+                    FROM employee_work_days
+                    RIGHT JOIN employees ON employee_work_days.employee_id = employees.employee_id
+                    ORDER BY employee_work_days.employee_id, employee_work_days.clock_in_date
                 """
 
                 cursor.execute(select_query)
 
                 return cursor.fetchall()
-            
-    except Error as error:
-        print(error)            
 
+    except Error as error:
+        print(error)
+
+def get_employee_work_days(id):
+    try:
+        with mysql.connector.connect(host="localhost", 
+                                    user=credentials.user, 
+                                    password=credentials.password, 
+                                    database=credentials.database) as connection:
+            
+            with connection.cursor() as cursor:
+                select_query = "SELECT * FROM employee_work_days WHERE employee_id = %s"
+
+                cursor.execute(select_query, (id,))
+
+                return cursor.fetchall()
+
+    except Error as error:
+        print(error)
+        
 def _insert_into_table(query, dictionary_list):
     """
     Inserts data contained in a list of dictionaries into a database.
@@ -107,4 +123,4 @@ def _insert_into_table(query, dictionary_list):
 
                 connection.commit()
     except Error as error:
-        print(error) 
+        print(error)   
