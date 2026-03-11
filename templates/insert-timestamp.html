@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insert Timestamp</title>
+</head>
+<body>
+    <h1>Insert New Timestamp</h1>
+    <form method="POST" action="/api/insert_timestamp">
+        <label for="employee_ids">Select the employee ID:</label>
+        <select name="employee_ids" id="employee_ids">
+            <option value="7262">7262</option>
+            <option value="1435">1435</option>
+            <option value="1441">1441</option>
+            <option value="7138">7138</option>
+            <option value="DR. K">DR. K</option>
+            <option value="PHARMACIST">PHARMACIST</option>
+            <option value="JRESE01AG">JRESE01AG</option>
+        </select>
+        <label for="workday">Select the workday:</label>
+        <input type="date" id="workday" name="workday">
+        <label for="hours">Input the number of hours worked:</label>
+        <input type="number" id="hours" name="hours" step="0.01" min="0" max="40">
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

@@ -28,7 +28,31 @@ def insert_employees():
 
     dictionary = file_reader.create_knopp_employees() + file_reader.create_agency_employees()
 
-    _insert_into_table(query=insert_command, dictionary_list=dictionary)    
+    _insert_into_table(query=insert_command, dictionary_list=dictionary)
+
+def insert_work_days_from_form(employee_id, clock_in_date, work_hours):
+    try:
+        with mysql.connector.connect(host="localhost", 
+                                    user=credentials.user, 
+                                    password=credentials.password, 
+                                    database=credentials.database) as connection:
+            
+            with connection.cursor() as cursor:
+                
+                insert_command = """
+                    INSERT INTO employee_work_days (employee_id, clock_in_date, total_hours) 
+                    VALUES (%s, %s, %s)
+                """
+
+                values = (employee_id, clock_in_date, work_hours)
+
+                cursor.execute(insert_command, values)
+
+                connection.commit()
+
+    except Error as error:
+        print(error)        
+
 
 def insert_work_days():
     """
