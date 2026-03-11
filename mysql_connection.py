@@ -31,6 +31,19 @@ def insert_employees():
     _insert_into_table(query=insert_command, dictionary_list=dictionary)
 
 def insert_work_days_from_form(employee_id, clock_in_date, work_hours):
+    """
+    Inserts workday data from the HTML form into the employee_work_days database
+
+    Parameters:
+        employee_id (str): The employee's id as recognized by CMS
+        clock_in_date (datetime): The date the employee clocked in
+            to work
+        total_hours (float): The total number of hours the employee
+            worked
+
+    Raises:
+        Error: if error occurs when connecting to or performing operations on the database.            
+    """
     try:
         with mysql.connector.connect(host="localhost", 
                                     user=credentials.user, 
@@ -54,9 +67,9 @@ def insert_work_days_from_form(employee_id, clock_in_date, work_hours):
         print(error)        
 
 
-def insert_work_days():
+def insert_work_days_from_csv():
     """
-    Inserts the following workday data into the employee_work_days database
+    Inserts the following workday data from the .csv file into the employee_work_days database
 
         employee_id (str): The employee's id as recognized by CMS
         clock_in_date (datetime): The date the employee clocked in

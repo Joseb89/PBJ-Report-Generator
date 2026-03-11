@@ -13,7 +13,7 @@ def create_databases():
     Inserts the necessary employee and timestamp data into the databse.
     """
     mysql_connection.insert_employees()
-    mysql_connection.insert_work_days()
+    mysql_connection.insert_work_days_from_csv()
 
 def create_header(root):
     """
