@@ -1,14 +1,34 @@
 from flask import Flask, render_template, request
+from zipfile import ZipFile
 
+import xml.etree.ElementTree as ET
+
+import xml_file_creator
 import mysql_connection
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route('/', methods=["GET", "POST"])
 def report_generator():
     """
     The home page where the report can be generated.
     """
+    data = ET.Element('nursingHomeData')
+
+    xml_file_creator.create_header(data)
+    xml_file_creator.create_body(data)
+
+    tree = ET.ElementTree(data)
+
+    ET.indent(tree, '  ')
+
+    file_name = "report.xml"
+
+    tree.write(file_name, encoding="ASCII", xml_declaration=True)
+
+    with ZipFile("PBJ_Report_Generator.zip", "w") as zip_file:
+        zip_file.write(file_name)
+
     return render_template("index.html")
 
 @app.route('/api/insert_timestamp', methods=['GET', 'POST'])
@@ -28,7 +48,7 @@ def insert_timestamp():
 
             mysql_connection.insert_work_days_from_form(employee_id, clock_in_date, work_hours)
         except ValueError as error:
-            return str(error)     
+            return str(error)    
 
     return render_template("insert-timestamp.html")
 

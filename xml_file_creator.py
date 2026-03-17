@@ -23,7 +23,7 @@ def create_header(root):
         root (Elememt[str]): The XML root to connect the header to.
     """
     header = ET.SubElement(root, 'header')
-    header.set('fileSpecVersion', '4.00.0')
+    header.set('fileSpecVersion', '4.10.0')
 
     facility_id = ET.SubElement(header, 'facilityId')
     facility_id.text = credentials.facility_id
