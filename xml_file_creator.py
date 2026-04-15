@@ -12,7 +12,6 @@ def create_databases():
     """
     Inserts the necessary employee and timestamp data into the databse.
     """
-    mysql_connection.insert_employees()
     mysql_connection.insert_work_days_from_csv()
 
 def create_header(root):
@@ -32,7 +31,7 @@ def create_header(root):
     state_code.text = 'TX'
 
     report_quarter = ET.SubElement(header, 'reportQuarter')
-    report_quarter.text = '1'
+    report_quarter.text = '2'
 
     federal_fiscal_year = ET.SubElement(header, 'federalFiscalYear')
     federal_fiscal_year.text = str(datetime.date.today().year)
@@ -55,6 +54,7 @@ def create_body(root):
 
     staff_hours = None
     staff_hour_entries = None
+    staff_work_day = None
     work_days = None
 
     previous_date = ''
@@ -76,14 +76,14 @@ def create_body(root):
             staff_employee_id = ET.SubElement(staff_hours, "employeeId")
             staff_employee_id.text = current_id
 
-            work_days = ET.SubElement(staff_hours, "workDays")   
-
-        staff_work_day = ET.SubElement(work_days, "workDay")
+            work_days = ET.SubElement(staff_hours, "workDays")
 
         if previous_date != '' and previous_date == work_day:
             _create_hour_entry(staff_hour_entries, total_hours, job_code, pay_code)
 
-            continue 
+            continue
+
+        staff_work_day = ET.SubElement(work_days, "workDay") 
 
         staff_date = ET.SubElement(staff_work_day, "date")
         staff_date.text = str(work_day)

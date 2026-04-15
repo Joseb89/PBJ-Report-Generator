@@ -13,6 +13,8 @@ def report_generator():
     """
     The home page where the report can be generated.
     """
+    xml_file_creator.create_databases()
+
     data = ET.Element('nursingHomeData')
 
     xml_file_creator.create_header(data)
@@ -72,4 +74,4 @@ def get_employee_work_days(employee_id):
     return render_template("employee-timestamps.html", employee_id=employee_id, timestamps=timestamps)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

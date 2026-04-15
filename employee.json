@@ -1,12 +1,5 @@
 [
     {
-        "id": "JPADMIN",
-        "firstName": "Jane",
-        "lastName": "Perry",
-        "jobTitleCode": 1,
-        "payTypeCode": 2 
-    },
-    {
         "id": 7262,
         "firstName": "Edna",
         "lastName": "Flores",
@@ -54,5 +47,12 @@
         "lastName": "Resendiz",
         "jobTitleCode": 10,
         "payTypeCode": 3
+    },
+    {
+        "id": 7163,
+        "firstName": "Janice",
+        "lastName": "Howell",
+        "jobTitleCode": 30,
+        "payTypeCode": 2
     }
 ]
