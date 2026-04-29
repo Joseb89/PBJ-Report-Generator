@@ -1,7 +1,8 @@
 report.xml
 PBJ Report.csv
 employee.json
-credentials.py
 PBJ_Report_Generator.zip
 .vscode
 __pycache__
+requirements.txt
+.env

@@ -4,8 +4,8 @@ Creates the XML file based on the data retrieved from the MySQL database.
 
 import xml.etree.ElementTree as ET
 import datetime
-import mysql_connection
-import credentials
+import os
+import pbj.mysql_connection as mysql_connection
 
 
 def create_databases():
@@ -25,7 +25,7 @@ def create_header(root):
     header.set('fileSpecVersion', '4.10.0')
 
     facility_id = ET.SubElement(header, 'facilityId')
-    facility_id.text = credentials.facility_id
+    facility_id.text = os.getenv("KNOPP_FACILITY_ID")
 
     state_code = ET.SubElement(header, 'stateCode')
     state_code.text = 'TX'

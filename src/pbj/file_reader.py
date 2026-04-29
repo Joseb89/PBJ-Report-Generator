@@ -60,7 +60,7 @@ def _create_dictionary():
     
     dict_list = []
 
-    with open("PBJ Report.csv", "r") as excel_file:
+    with open("PBJ-Report.csv", "r") as excel_file:
         csv_file = csv.DictReader(excel_file)
 
         for line in csv_file:

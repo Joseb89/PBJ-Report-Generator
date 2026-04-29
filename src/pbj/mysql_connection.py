@@ -4,10 +4,14 @@ and retrieving data.
 """
 
 import mysql.connector
-import credentials
-import file_reader
+import os
+import pbj.file_reader as file_reader
 
 from mysql.connector import Error
+
+_user = os.getenv("MYSQL_USERNAME")
+_password = os.getenv("MYSQL_PASSWORD")
+_database = os.getenv("MYSQL_DATABASE")
 
 
 def insert_work_days_from_form(employee_id, clock_in_date, work_hours):
@@ -26,9 +30,9 @@ def insert_work_days_from_form(employee_id, clock_in_date, work_hours):
     """
     try:
         with mysql.connector.connect(host="localhost", 
-                                    user=credentials.user, 
-                                    password=credentials.password, 
-                                    database=credentials.database) as connection:
+                                    user=_user, 
+                                    password=_password, 
+                                    database=_database) as connection:
             
             with connection.cursor() as cursor:
                 
@@ -79,9 +83,9 @@ def get_all_work_days():
     """
     try:
         with mysql.connector.connect(host="localhost", 
-                                    user=credentials.user, 
-                                    password=credentials.password, 
-                                    database=credentials.database) as connection:
+                                    user=_user, 
+                                    password=_password, 
+                                    database=_database) as connection:
 
             with connection.cursor() as cursor:
 
@@ -101,9 +105,9 @@ def get_all_work_days():
 def get_employee_work_days(id):
     try:
         with mysql.connector.connect(host="localhost", 
-                                    user=credentials.user, 
-                                    password=credentials.password, 
-                                    database=credentials.database) as connection:
+                                    user=_user, 
+                                    password=_password, 
+                                    database=_database) as connection:
             
             with connection.cursor() as cursor:
                 select_query = "SELECT * FROM employee_work_days WHERE employee_id = %s"
@@ -128,9 +132,9 @@ def _insert_into_table(query, dictionary_list):
     """
     try:
         with mysql.connector.connect(host="localhost", 
-                                    user=credentials.user, 
-                                    password=credentials.password, 
-                                    database=credentials.database) as connection:
+                                    user=_user, 
+                                    password=_password, 
+                                    database=_database) as connection:
 
             with connection.cursor() as cursor:
                     

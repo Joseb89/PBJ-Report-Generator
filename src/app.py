@@ -3,8 +3,8 @@ from zipfile import ZipFile
 
 import xml.etree.ElementTree as ET
 
-import xml_file_creator
-import mysql_connection
+import pbj.xml_file_creator as xml_file_creator
+import pbj.mysql_connection as mysql_connection
 
 app = Flask(__name__)
 
@@ -13,23 +13,25 @@ def report_generator():
     """
     The home page where the report can be generated.
     """
-    xml_file_creator.create_databases()
+    if request.method == "POST":
 
-    data = ET.Element('nursingHomeData')
+        xml_file_creator.create_databases()
 
-    xml_file_creator.create_header(data)
-    xml_file_creator.create_body(data)
+        data = ET.Element('nursingHomeData')
 
-    tree = ET.ElementTree(data)
+        xml_file_creator.create_header(data)
+        xml_file_creator.create_body(data)
 
-    ET.indent(tree, '  ')
+        tree = ET.ElementTree(data)
 
-    file_name = "report.xml"
+        ET.indent(tree, '  ')
 
-    tree.write(file_name, encoding="ASCII", xml_declaration=True)
+        file_name = "report.xml"
 
-    with ZipFile("PBJ_Report_Generator.zip", "w") as zip_file:
-        zip_file.write(file_name)
+        tree.write(file_name, encoding="ASCII", xml_declaration=True)
+
+        with ZipFile("PBJ_Report_Generator.zip", "w") as zip_file:
+            zip_file.write(file_name)
 
     return render_template("index.html")
 
