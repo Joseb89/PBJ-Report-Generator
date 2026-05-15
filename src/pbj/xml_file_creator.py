@@ -10,9 +10,9 @@ import pbj.mysql_connection as mysql_connection
 
 def create_databases():
     """
-    Inserts the necessary employee and timestamp data into the databse.
+    Inserts the necessary timestamp data into the databse.
     """
-    mysql_connection.insert_work_days_from_csv()
+    mysql_connection.insert_work_days()
 
 def create_header(root):
     """
@@ -31,7 +31,7 @@ def create_header(root):
     state_code.text = 'TX'
 
     report_quarter = ET.SubElement(header, 'reportQuarter')
-    report_quarter.text = '2'
+    report_quarter.text = '3'
 
     federal_fiscal_year = ET.SubElement(header, 'federalFiscalYear')
     federal_fiscal_year.text = str(datetime.date.today().year)

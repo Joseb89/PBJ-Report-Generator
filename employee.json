@@ -54,5 +54,12 @@
         "lastName": "Howell",
         "jobTitleCode": 30,
         "payTypeCode": 2
+    },
+    {
+        "id": "ODUM",
+        "firstName": "",
+        "lastName": "",
+        "jobTitleCode": 16,
+        "payTypeCode": 3  
     }
 ]

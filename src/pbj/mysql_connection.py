@@ -9,49 +9,13 @@ import pbj.file_reader as file_reader
 
 from mysql.connector import Error
 
+_name = os.getenv("MYSQL_HOST")
 _user = os.getenv("MYSQL_USERNAME")
 _password = os.getenv("MYSQL_PASSWORD")
-_database = os.getenv("MYSQL_DATABASE")
+_database = os.getenv("MYSQL_DATABASE")     
 
 
-def insert_work_days_from_form(employee_id, clock_in_date, work_hours):
-    """
-    Inserts workday data from the HTML form into the employee_work_days database
-
-    Parameters:
-        employee_id (str): The employee's id as recognized by CMS
-        clock_in_date (datetime): The date the employee clocked in
-            to work
-        total_hours (float): The total number of hours the employee
-            worked
-
-    Raises:
-        Error: if error occurs when connecting to or performing operations on the database.            
-    """
-    try:
-        with mysql.connector.connect(host="localhost", 
-                                    user=_user, 
-                                    password=_password, 
-                                    database=_database) as connection:
-            
-            with connection.cursor() as cursor:
-                
-                insert_command = """
-                    INSERT INTO employee_work_days (employee_id, clock_in_date, total_hours) 
-                    VALUES (%s, %s, %s)
-                """
-
-                values = (employee_id, clock_in_date, work_hours)
-
-                cursor.execute(insert_command, values)
-
-                connection.commit()
-
-    except Error as error:
-        print(error)        
-
-
-def insert_work_days_from_csv():
+def insert_work_days():
     """
     Inserts the following workday data from the .csv file into the employee_work_days database
 
@@ -59,7 +23,9 @@ def insert_work_days_from_csv():
         clock_in_date (datetime): The date the employee clocked in
             to work
         total_hours (float): The total number of hours the employee
-            worked    
+            worked
+        job_code (int): The code that represents the employee's job title
+        pay_code (int): Specifies whether the work wa       
     """
 
     insert_command = """
@@ -67,9 +33,20 @@ def insert_work_days_from_csv():
         VALUES (%(employee_id)s, %(clock_in_date)s, %(total_hours)s, %(job_code)s, %(pay_code)s)
     """
 
-    dictionary = file_reader.create_timestamps()
+    try:
+        with mysql.connector.connect(host=_name, 
+                                    user=_user, 
+                                    password=_password, 
+                                    database=_database) as connection:
 
-    _insert_into_table(query=insert_command, dictionary_list=dictionary)
+            with connection.cursor() as cursor:
+                    
+                cursor.executemany(insert_command, file_reader.create_timestamps())
+
+                connection.commit()
+    except Error as error:
+        print(error) 
+
 
 def get_all_work_days():
     """
@@ -82,7 +59,7 @@ def get_all_work_days():
         Error: if error occurs when connecting to or performing operations on the database.    
     """
     try:
-        with mysql.connector.connect(host="localhost", 
+        with mysql.connector.connect(host=_name, 
                                     user=_user, 
                                     password=_password, 
                                     database=_database) as connection:
@@ -104,7 +81,7 @@ def get_all_work_days():
 
 def get_employee_work_days(id):
     try:
-        with mysql.connector.connect(host="localhost", 
+        with mysql.connector.connect(host=_name, 
                                     user=_user, 
                                     password=_password, 
                                     database=_database) as connection:
@@ -118,28 +95,3 @@ def get_employee_work_days(id):
 
     except Error as error:
         print(error)
-        
-def _insert_into_table(query, dictionary_list):
-    """
-    Inserts data contained in a list of dictionaries into a database.
-
-    Parameters:
-        query (str): the INSERT query to send to the database.
-        dictionary_list (list[dict]): The list of dictionaries.
-    
-    Raises:
-        Error: if error occurs when connecting to or performing operations on the database.
-    """
-    try:
-        with mysql.connector.connect(host="localhost", 
-                                    user=_user, 
-                                    password=_password, 
-                                    database=_database) as connection:
-
-            with connection.cursor() as cursor:
-                    
-                cursor.executemany(query, dictionary_list)
-
-                connection.commit()
-    except Error as error:
-        print(error)   

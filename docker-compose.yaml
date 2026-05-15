@@ -1,0 +1,25 @@
+services:
+  web:
+    image: khrc-pbj-report:latest
+    container_name: pbj-report
+    ports:
+      - 5000:5000
+    env_file:
+      - .env  
+    depends_on: 
+      - db
+    volumes:
+      - ./PBJ-Report.csv:/app/PBJ-Report.csv
+
+  db:
+    image: mysql:8.4.9
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USERNAME}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+    - 3306:3306
+    volumes:
+      - ./pbj.sql:/docker-entrypoint-initdb.d/pbj.sql       
