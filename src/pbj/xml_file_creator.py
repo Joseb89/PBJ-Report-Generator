@@ -5,7 +5,7 @@ Creates the XML file based on the data retrieved from the MySQL database.
 import xml.etree.ElementTree as ET
 import datetime
 import os
-import pbj.mysql_connection as mysql_connection
+import mysql_connection as mysql_connection
 
 
 def create_databases():
@@ -21,6 +21,8 @@ def create_header(root):
     Parameters:
         root (Elememt[str]): The XML root to connect the header to.
     """
+    current_date = datetime.date.today()
+
     header = ET.SubElement(root, 'header')
     header.set('fileSpecVersion', '4.10.0')
 
@@ -30,11 +32,12 @@ def create_header(root):
     state_code = ET.SubElement(header, 'stateCode')
     state_code.text = 'TX'
 
+    current_quarter = (current_date.month - 1) // 3 + 1
     report_quarter = ET.SubElement(header, 'reportQuarter')
-    report_quarter.text = '3'
+    report_quarter.text = str(current_quarter)
 
     federal_fiscal_year = ET.SubElement(header, 'federalFiscalYear')
-    federal_fiscal_year.text = str(datetime.date.today().year)
+    federal_fiscal_year.text = str(current_date.year)
 
 def create_body(root):
     """
@@ -51,13 +54,13 @@ def create_body(root):
     user_work_days = mysql_connection.get_all_work_days()
 
     current_id = ''
+    previous_id = ''
+    previous_date = ''
 
     staff_hours = None
     staff_hour_entries = None
     staff_work_day = None
     work_days = None
-
-    previous_date = ''
 
     for id, work_day, total_hours, job_code, pay_code in user_work_days:
         if id == None:
@@ -78,7 +81,7 @@ def create_body(root):
 
             work_days = ET.SubElement(staff_hours, "workDays")
 
-        if previous_date != '' and previous_date == work_day:
+        if previous_date != '' and previous_date == work_day and current_id == previous_id:
             _create_hour_entry(staff_hour_entries, total_hours, job_code, pay_code)
 
             continue
@@ -93,6 +96,7 @@ def create_body(root):
         _create_hour_entry(staff_hour_entries, total_hours, job_code, pay_code)
 
         previous_date = work_day
+        previous_id = id
 
 def _create_hour_entry(root, total_hours, job_code, pay_code):
     """

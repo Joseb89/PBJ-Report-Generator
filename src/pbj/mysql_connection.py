@@ -5,7 +5,7 @@ and retrieving data.
 
 import mysql.connector
 import os
-import pbj.file_reader as file_reader
+import file_reader as file_reader
 
 from mysql.connector import Error
 
