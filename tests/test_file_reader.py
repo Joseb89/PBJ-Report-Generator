@@ -1,0 +1,12 @@
+from src.file_reader import create_timestamps
+
+def test_create_timestamps():
+    test_data = create_timestamps("tests\\PBJ-Report.csv")
+
+    assert test_data
+
+    assert test_data[0].get("employee_id") == "Taverin"
+
+    assert test_data[1].get("job_code") == '10'
+
+

@@ -1,12 +1,12 @@
 """
 Reads the .csv file to create 
-the dictionaries that will be used
+the list of dictionaries that will be used
 to insert the employee workdays in the database.
 """
 
 import csv
 
-def create_timestamps():
+def create_timestamps(file="./PBJ_Report.csv"):
     """
     Reads the .csv file and stores the data in a dictionary list.
 
@@ -18,10 +18,10 @@ def create_timestamps():
     
     dict_list = []
 
-    with open("./PBJ-Report.csv", "r") as excel_file:
-        csv_file = csv.DictReader(excel_file)
+    with open(file, "r") as csv_file:
+        data = csv.DictReader(csv_file)
 
-        for line in csv_file:
+        for line in data:
             id = line.get("employeeId")
             clock_in_date = line.get("date")
             total_hours = float(line.get("hours"))
@@ -31,6 +31,8 @@ def create_timestamps():
             dict_data = {"employee_id": id, "clock_in_date": clock_in_date,
                          "total_hours": total_hours, 
                         "job_code": job_title_code, "pay_code": pay_type_code}
+            
+            dict_data.get
 
             dict_list.append(dict_data)
 

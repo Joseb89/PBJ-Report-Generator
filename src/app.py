@@ -1,5 +1,4 @@
 from flask import Flask, render_template
-from zipfile import ZipFile
 
 import xml.etree.ElementTree as ET
 
@@ -29,9 +28,6 @@ def report_generator():
 
     tree.write(file_name, encoding="ASCII", xml_declaration=True)
 
-    # with ZipFile("PBJ_Report_Generator.zip", "w") as zip_file:
-    #     zip_file.write(file_name)
-
     return "OK."
 
 @app.route('/api/get_employee_timestamps', methods=['GET'])
@@ -54,4 +50,5 @@ def get_employee_work_days(employee_id):
     return render_template("employee-timestamps.html", employee_id=employee_id, timestamps=timestamps)
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    # app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(debug=True)
