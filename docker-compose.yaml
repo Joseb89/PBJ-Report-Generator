@@ -22,4 +22,4 @@ services:
     ports:
     - 3306:3306
     volumes:
-      - ./pbj.sql:/docker-entrypoint-initdb.d/pbj.sql       
+    - ./pbj.sql:/docker-entrypoint-initdb.d/pbj.sql

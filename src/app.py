@@ -10,7 +10,7 @@ app = Flask(__name__)
 @app.route('/')
 def report_generator():
     """
-    The home page where the report can be generated.
+    The home page where the report is generated.
     """
 
     xml_file_creator.create_databases()

@@ -51,52 +51,55 @@ def create_body(root):
     staffing_hours = ET.SubElement(root, 'staffingHours')
     staffing_hours.set("processType", "merge")
 
-    user_work_days = mysql_connection.get_all_work_days()
+    try:
+        user_work_days = mysql_connection.get_all_work_days()
 
-    current_id = ''
-    previous_id = ''
-    previous_date = ''
+        current_id = ''
+        previous_id = ''
+        previous_date = ''
 
-    staff_hours = None
-    staff_hour_entries = None
-    staff_work_day = None
-    work_days = None
+        staff_hours = None
+        staff_hour_entries = None
+        staff_work_day = None
+        work_days = None
 
-    for id, work_day, total_hours, job_code, pay_code in user_work_days:
-        if id == None:
-            continue
+        for id, work_day, total_hours, job_code, pay_code in user_work_days:
+            if id == None:
+                continue
 
-        if id != current_id:
-            current_id = id
+            if id != current_id:
+                current_id = id
 
-            employee = ET.SubElement(employees, "employee")
+                employee = ET.SubElement(employees, "employee")
 
-            employee_id = ET.SubElement(employee, "employeeId")
-            employee_id.text = current_id
+                employee_id = ET.SubElement(employee, "employeeId")
+                employee_id.text = current_id
 
-            staff_hours = ET.SubElement(staffing_hours, "staffHours")
+                staff_hours = ET.SubElement(staffing_hours, "staffHours")
 
-            staff_employee_id = ET.SubElement(staff_hours, "employeeId")
-            staff_employee_id.text = current_id
+                staff_employee_id = ET.SubElement(staff_hours, "employeeId")
+                staff_employee_id.text = current_id
 
-            work_days = ET.SubElement(staff_hours, "workDays")
+                work_days = ET.SubElement(staff_hours, "workDays")
 
-        if previous_date != '' and previous_date == work_day and current_id == previous_id:
+            if previous_date != '' and previous_date == work_day and current_id == previous_id:
+                _create_hour_entry(staff_hour_entries, total_hours, job_code, pay_code)
+
+                continue
+
+            staff_work_day = ET.SubElement(work_days, "workDay") 
+
+            staff_date = ET.SubElement(staff_work_day, "date")
+            staff_date.text = str(work_day)
+
+            staff_hour_entries = ET.SubElement(staff_work_day, "hourEntries")
+
             _create_hour_entry(staff_hour_entries, total_hours, job_code, pay_code)
 
-            continue
-
-        staff_work_day = ET.SubElement(work_days, "workDay") 
-
-        staff_date = ET.SubElement(staff_work_day, "date")
-        staff_date.text = str(work_day)
-
-        staff_hour_entries = ET.SubElement(staff_work_day, "hourEntries")
-
-        _create_hour_entry(staff_hour_entries, total_hours, job_code, pay_code)
-
-        previous_date = work_day
-        previous_id = id
+            previous_date = work_day
+            previous_id = id
+    except TypeError as error:
+        print(error)         
 
 def _create_hour_entry(root, total_hours, job_code, pay_code):
     """
