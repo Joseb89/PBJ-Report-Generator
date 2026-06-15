@@ -7,3 +7,4 @@ PBJ_Report_Generator.zip
 __pycache__
 requirements.txt
 .env
+.pytest_cache

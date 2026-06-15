@@ -17,7 +17,7 @@ _database = os.getenv("MYSQL_DATABASE")
 
 def insert_work_days():
     """
-    Inserts the following workday data from the .csv file into the employee_work_days database
+    Inserts the following workday data into the employee_work_days database:
 
         employee_id (str): The employee's id as recognized by CMS
         clock_in_date (datetime): The date the employee clocked in
@@ -25,7 +25,11 @@ def insert_work_days():
         total_hours (float): The total number of hours the employee
             worked
         job_code (int): The code that represents the employee's job title
-        pay_code (int): Specifies whether the work wa       
+        pay_code (int): Specifies whether the work was exempt, non-exempt, or contract.
+
+    Raises:
+        Error: if error occurs when connecting to or performing operations on the database.  
+        ValueError: if invalid data or data type is inserted.
     """
 
     insert_command = """
@@ -45,12 +49,14 @@ def insert_work_days():
 
                 connection.commit()
     except Error as error:
-        print(error) 
+        print(error)
+    except ValueError as error:
+        print(error)       
 
 
 def get_all_work_days():
     """
-    Retreives all of the employee timestamps from the employee_work_days database.
+    Retreives all of the employee timestamps from the database.
 
     Returns:
         list[tuple]: The employee timestamps
@@ -80,6 +86,15 @@ def get_all_work_days():
         print(error)
 
 def get_employee_work_days(id):
+    """
+    Retreives the timestamps of the employee with the specified id.
+
+    Returns:
+        list[tuple]: The employee timestamps.
+
+    Raises:
+        Error: if error occurs when connecting to or performing operations on the database.    
+    """
     try:
         with mysql.connector.connect(host=_name, 
                                     user=_user, 

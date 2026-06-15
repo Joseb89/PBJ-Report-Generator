@@ -28,7 +28,7 @@ def report_generator():
 
     tree.write(file_name, encoding="ASCII", xml_declaration=True)
 
-    return "OK."
+    return "Report successfuly generated."
 
 @app.route('/api/get_employee_timestamps', methods=['GET'])
 def get_work_days():
@@ -50,5 +50,5 @@ def get_employee_work_days(employee_id):
     return render_template("employee-timestamps.html", employee_id=employee_id, timestamps=timestamps)
 
 if __name__ == '__main__':
-    # app.run(host="0.0.0.0", port=5000, debug=True)
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
+    # app.run(debug=True)
