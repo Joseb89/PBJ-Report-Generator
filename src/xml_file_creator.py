@@ -98,6 +98,7 @@ def create_body(root):
 
             previous_date = work_day
             previous_id = id
+            
     except TypeError as error:
         print(error)         
 

@@ -1,6 +1,7 @@
 import pytest
 import pymysql
 
+from src.file_reader import create_timestamps
 from testcontainers.mysql import MySqlContainer
 
 @pytest.fixture(scope="session")
@@ -33,16 +34,26 @@ def test_connection(test_database):
         INSERT INTO employee_work_days (employee_id, clock_in_date, total_hours, job_code, pay_code) 
         VALUES (%(employee_id)s, %(clock_in_date)s, %(total_hours)s, %(job_code)s, %(pay_code)s)
     """
-        test_data = [{"employee_id": "Taverin", "clock_in_date": "2026-03-30", "total_hours": 7.89,
-                      "job_code": 9, "pay_code": 3},
-                      {"employee_id": "Taverin", "clock_in_date": "2026-04-21", "total_hours": 8.00,
-                      "job_code": 9, "pay_code": 3},
-                      {"employee_id": "Elendil", "clock_in_date": "2026-04-30", "total_hours": 7.95,
-                      "job_code": 10, "pay_code": 3}]
+        test_data = create_timestamps("tests\\PBJ-Report-Test.csv")
         
         cursor.executemany(insert_command, test_data)
 
         connection.commit()
         
-        yield connection, cursor  
-    
+        yield connection, cursor
+
+@pytest.fixture(scope="session")
+def test_data(test_connection):
+    test_cursor = test_connection[1]
+
+    query = """
+        SELECT employee_id, clock_in_date, total_hours, job_code, pay_code
+        FROM employee_work_days
+        ORDER BY employee_id, clock_in_date
+        """
+
+    test_cursor.execute(query)
+
+    test_data = test_cursor.fetchall()
+
+    yield test_data

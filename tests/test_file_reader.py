@@ -2,7 +2,7 @@ import pytest
 from src.file_reader import create_timestamps
 
 def test_create_timestamps():
-    test_data = create_timestamps("tests\\PBJ-Report.csv")
+    test_data = create_timestamps("tests\\PBJ-Report-Test.csv")
 
     assert test_data
 
