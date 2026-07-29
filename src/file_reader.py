@@ -6,14 +6,12 @@ to insert the employee workdays in the database.
 
 import csv
 
-def create_timestamps(file="./PBJ-Report.csv"):
+def create_timestamps(file="./PBJ-Report.csv") -> list:
     """
     Reads the .csv file and stores the data in a dictionary list.
 
     Returns:
         list[dict]: List of timestamp dictionaries
-        containing employee id, work date, total hours,
-        job code, and pay code. 
 
         Raises:
             FileNotFoundError: if the .csv file cannot be located or loaded.

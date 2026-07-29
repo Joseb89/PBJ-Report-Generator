@@ -12,12 +12,12 @@ from mysql.connector import Error
 _name = os.getenv("MYSQL_HOST")
 _user = os.getenv("MYSQL_USERNAME")
 _password = os.getenv("MYSQL_PASSWORD")
-_database = os.getenv("MYSQL_DATABASE")     
+_database = os.getenv("MYSQL_DATABASE")
 
 
 def insert_work_days():
     """
-    Inserts the following workday data into the employee_work_days database:
+    Inserts the following workday data into the database:
 
         employee_id (str): The employee's id as recognized by CMS
         clock_in_date (datetime): The date the employee clocked in
@@ -54,7 +54,7 @@ def insert_work_days():
         print(error)       
 
 
-def get_all_work_days():
+def get_all_work_days() -> list:
     """
     Retreives all of the employee timestamps from the database.
 
@@ -85,7 +85,7 @@ def get_all_work_days():
     except Error as error:
         print(error)
 
-def get_employee_work_days(id):
+def get_employee_work_days(id) -> list:
     """
     Retreives the timestamps of the employee with the specified id.
 

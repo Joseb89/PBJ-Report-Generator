@@ -2,7 +2,7 @@ FROM python:3.14.4-alpine3.23
 
 WORKDIR /app
 
-COPY src/pbj /app
+COPY src /app
 
 COPY --chmod=444 requirements.txt /app
 

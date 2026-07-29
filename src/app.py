@@ -8,7 +8,7 @@ import mysql_connection as mysql_connection
 app = Flask(__name__)
 
 @app.route('/')
-def report_generator():
+def report_generator() -> str:
     """
     The home page where the report is generated.
     """
