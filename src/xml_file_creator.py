@@ -5,21 +5,24 @@ Creates the XML file based on the data retrieved from the MySQL database.
 import xml.etree.ElementTree as ET
 import datetime
 import os
-import mysql_connection as mysql_connection
 
+from timestamps import Database
+
+_db = Database()
 
 def create_databases():
     """
     Inserts the necessary timestamp data into the databse.
     """
-    mysql_connection.insert_work_days()
+    _db.create_tables()
+    _db.insert_timestamps()
 
-def create_header(root):
+def create_header(root: ET.Element):
     """
     Creates the header for the XML file.
 
     Parameters:
-        root (Elememt[str]): The XML root to connect the header to.
+        root (Elememt): The XML root to connect the header to.
     """
     current_date = datetime.date.today()
 
@@ -44,26 +47,32 @@ def create_body(root):
     Creates the body for the XML file.
 
     Parameters:
-        root (Elememt[str]): The XML root to connect the body to.
+        root (Elememt): The XML root to connect the body to.
     """
     employees = ET.SubElement(root, 'employees')
     
     staffing_hours = ET.SubElement(root, 'staffingHours')
     staffing_hours.set("processType", "merge")
 
+    current_id = ''
+    previous_id = ''
+    previous_date = ''
+
+    staff_hours = None
+    staff_hour_entries = None
+    staff_work_day = None
+    work_days = None
+
     try:
-        user_work_days = mysql_connection.get_all_work_days()
+        user_work_days = _db.select_all_timestamps()
 
-        current_id = ''
-        previous_id = ''
-        previous_date = ''
+        for user_work_day in user_work_days:
+            id = user_work_day.employee_id
+            work_day = user_work_day.clock_in_date
+            total_hours = user_work_day.total_hours
+            job_code = user_work_day.job_code
+            pay_code = user_work_day.pay_code
 
-        staff_hours = None
-        staff_hour_entries = None
-        staff_work_day = None
-        work_days = None
-
-        for id, work_day, total_hours, job_code, pay_code in user_work_days:
             if id == None:
                 continue
 
