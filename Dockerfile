@@ -13,7 +13,7 @@ RUN apk add --no-cache \
     pkgconfig \
     curl
 
-RUN pip install --no-cache-dir -r requirements.txt mysqlclient
+RUN pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 5000
 
