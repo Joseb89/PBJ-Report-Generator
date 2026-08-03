@@ -61,7 +61,7 @@ class Database():
         with Session(self.engine) as session:
             try:
                 statement = select(Timestamp.employee_id, Timestamp.clock_in_date, Timestamp.total_hours,
-                             Timestamp.job_code, Timestamp.pay_code)
+                             Timestamp.job_code, Timestamp.pay_code).order_by(Timestamp.employee_id, Timestamp.clock_in_date)
                 
                 return session.execute(statement)
             except SQLAlchemyError as e:
