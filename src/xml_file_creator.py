@@ -8,14 +8,21 @@ import os
 
 from timestamps import Database
 
-_db = Database()
+_username = os.getenv("MYSQL_USERNAME")
+_password = os.getenv("MYSQL_PASSWORD")
+_host = os.getenv("MYSQL_HOST")
+_database = os.getenv("MYSQL_DATABASE")
+
+databse_url = f"mysql+pymysql://{_username}:{_password}@{_host}:{3306}/{_database}"
+
+_db = Database(databse_url)
 
 def create_databases():
     """
     Inserts the necessary timestamp data into the databse.
     """
     _db.create_tables()
-    _db.insert_timestamps()
+    _db.insert_timestamps("./PBJ-Report.csv")
 
 def create_header(root: ET.Element):
     """

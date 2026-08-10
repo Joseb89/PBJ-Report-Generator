@@ -1,11 +1,10 @@
-import os
-
 from datetime import datetime
 
 from sqlalchemy import create_engine, DateTime, Float, Integer, select, String
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, Session
 from sqlalchemy.exc import SQLAlchemyError
-from file_reader import create_timestamps
+
+from src.file_reader import create_timestamps
 
 class Base(DeclarativeBase):
     pass
@@ -23,23 +22,18 @@ class Timestamp(Base):
 
 class Database():
 
-    def __init__(self):
-        username = os.getenv("MYSQL_USERNAME")
-        password = os.getenv("MYSQL_PASSWORD")
-        host = os.getenv("MYSQL_HOST")
-        database = os.getenv("MYSQL_DATABASE")
+    def __init__(self, database_url: str):
+        self.database_url = database_url
 
-        self.databse_url = f"mysql+pymysql://{username}:{password}@{host}:{3306}/{database}"
-
-        self.engine = create_engine(self.databse_url)
+        self.engine = create_engine(self.database_url)
 
     def create_tables(self):
         Base.metadata.create_all(self.engine)
 
-    def insert_timestamps(self):
+    def insert_timestamps(self, file):
         with Session(self.engine) as session:
             try:
-                timestamps = create_timestamps()
+                timestamps = create_timestamps(file)
 
                 for timestamp in timestamps:
                     employee_id = timestamp.get("employee_id")

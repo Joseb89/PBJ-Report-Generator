@@ -6,7 +6,7 @@ to insert the employee workdays in the database.
 
 import csv
 
-def create_timestamps(file="./PBJ-Report.csv") -> list:
+def create_timestamps(file) -> list:
     """
     Reads the .csv file and stores the data in a dictionary list.
 

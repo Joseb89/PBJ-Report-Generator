@@ -23,3 +23,16 @@ services:
     - 3306:3306
     volumes:
     - ./pbj.sql:/docker-entrypoint-initdb.d/pbj.sql
+
+  db-test:
+    image: mysql:8.4.9
+    container_name: mysql-db-test
+    environment:
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_DATABASE: pbj-test
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+    ports:
+    - 3307:3306
+    volumes:
+    - ./pbj.sql:/docker-entrypoint-initdb.d/pbj.sql

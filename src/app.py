@@ -3,11 +3,11 @@ from timestamps import Database
 
 import xml.etree.ElementTree as ET
 
-import xml_file_creator as xml_file_creator
+import xml_file_creator
 
 app = Flask(__name__)
 
-_db = Database()
+_db = Database(xml_file_creator.databse_url)
 
 @app.route('/')
 def report_generator() -> str:
